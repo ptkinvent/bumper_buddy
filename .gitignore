@@ -1,0 +1,5 @@
+db.sqlite3
+static/
+staticfiles/
+mediafiles/
+node_modules/
