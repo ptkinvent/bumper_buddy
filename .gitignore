@@ -1,0 +1,6 @@
+db.sqlite3
+mediafiles/
+staticfiles/
+node_modules/
+static/assets/js/main.js
+static/assets/js/styles.css
