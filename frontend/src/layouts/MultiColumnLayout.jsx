@@ -18,7 +18,6 @@ import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
 export default function MultiColumnLayout({ currentTab, children }) {
   const [user, setUser] = useUserContext();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [user, setUser] = useUserContext();
 
   const navigation = [
     { name: "Dashboard", href: "/dashboard", icon: HomeIcon, current: currentTab === "dashboard" },

@@ -10,6 +10,7 @@ npm run start
 
 In another terminal, start Django to serve the backend:
 ```
+export OPENAI_API_KEY="..."
 sudo apt install python3-pip -y
 pip3 install -r requirements.txt
 python3 manage.py migrate

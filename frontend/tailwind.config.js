@@ -8,6 +8,15 @@ export default {
   safelist: [
     "h-full",
 
+    // Stats
+    "grid-cols-2",
+
+    "text-blue-500",
+    "bg-blue-500/15",
+
+    "text-yellow-500",
+    "bg-yellow-500/15",
+
     // Alerts
     "text-primary-500",
     "text-primary-700",
