@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'accounts',
     'api',
+    'claims',
 ]
 
 AUTHENTICATION_BACKENDS = [
