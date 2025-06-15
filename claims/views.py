@@ -1,16 +1,16 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404
+
+from .models import Claim
 
 
-def index_view(request):
+@login_required
+def index(request):
     return render(request, 'index.html')
 
 
 @login_required
-def dashboard_view(request):
-    return render(request, 'index.html')
-
-
-@login_required
-def knowledge_base_view(request):
+def detail(request, pk):
+    claim = get_object_or_404(Claim, id=pk)
     return render(request, 'index.html')
