@@ -227,13 +227,13 @@ export default function ClaimIndexPage() {
       .then((response) => response.json())
       .then((data) => {
         setClaims(data.claims);
+        setUpdateClaimAssigneeModalOpen(false);
       })
       .catch(() => {
         setFetchFailed(true);
       })
       .finally(() => {
         setIsSubmitting(false);
-        setUpdateClaimAssigneeModalOpen(false);
       });
   }
 
@@ -259,10 +259,10 @@ export default function ClaimIndexPage() {
       })
       .catch(() => {
         setFetchFailed(true);
+        setRemoveClaimAssigneeModalOpen(false);
       })
       .finally(() => {
         setIsSubmitting(false);
-        setRemoveClaimAssigneeModalOpen(false);
       });
   }
 

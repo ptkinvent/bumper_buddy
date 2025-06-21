@@ -12,4 +12,5 @@ urlpatterns = [
     path('claims/<int:pk>/media/', views.media_api),
     path('claims/<int:pk>/damages/', views.damages_api),
     path('auto-assess/', views.auto_assess_api),
+    path('assistant/', views.assistant_api),
 ]

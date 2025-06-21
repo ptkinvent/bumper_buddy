@@ -6,6 +6,7 @@ from django.middleware.csrf import get_token
 
 from claims.models import Vehicle, Claim, Media, Damage, Part
 from .auto_assess_agent import AutoAssessAgent
+from .assistant_agent import AssistantAgent
 
 
 def users_api(request):
@@ -182,3 +183,13 @@ def auto_assess_api(request):
             agent = AutoAssessAgent()
             assessment = agent.run(claim.vehicle, claim.media.all())
             return JsonResponse({'assessment': assessment})
+
+
+def assistant_api(request):
+    if request.method == 'POST':
+        if 'assistant' in request.POST:
+            chat = request.POST['chat']
+            chat_history = json.loads(request.POST['history'])
+            agent = AssistantAgent()
+            response = agent.run(chat, chat_history)
+            return JsonResponse({'response': response})

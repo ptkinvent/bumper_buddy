@@ -499,13 +499,13 @@ export default function ClaimDetailPage() {
       .then((data) => {
         setDamages(data.damages);
         setDamageFormData({});
+        setAutoAssessModalOpen(false);
       })
       .catch(() => {
         setFetchFailed(true);
       })
       .finally(() => {
         setIsSubmitting(false);
-        setAutoAssessModalOpen(false);
       });
   }
 
@@ -528,13 +528,13 @@ export default function ClaimDetailPage() {
       .then((data) => {
         setDamages(data.damages);
         setDamageFormData({});
+        setAutoAssessModalOpen(false);
       })
       .catch(() => {
         setFetchFailed(true);
       })
       .finally(() => {
         setIsSubmitting(false);
-        setAutoAssessModalOpen(false);
       });
   }
 
