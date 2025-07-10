@@ -1,6 +1,6 @@
 import json
 from django.shortcuts import get_object_or_404
-from django.http import JsonResponse
+from django.http import JsonResponse, StreamingHttpResponse
 from accounts.models import CustomUser
 from django.middleware.csrf import get_token
 
@@ -201,5 +201,7 @@ def assistant_api(request):
             chat = request.POST['chat']
             chat_history = json.loads(request.POST['history'])
             agent = AssistantAgent()
-            response = agent.run(chat, chat_history)
-            return JsonResponse({'response': response})
+            def event_stream():
+                for chunk in agent.run(chat, chat_history):
+                    yield f'data: {chunk}\n\n'
+            return StreamingHttpResponse(event_stream(), content_type='text/event-stream')

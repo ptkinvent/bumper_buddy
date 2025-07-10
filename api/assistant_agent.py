@@ -36,7 +36,7 @@ class AssistantAgent:
         graph_builder = StateGraph(MessagesState)
         tools = [search_vehicles, search_parts, search_claims]
 
-        llm = ChatOpenAI(model='gpt-4o', temperature=0, api_key=OPENAI_API_KEY)
+        llm = ChatOpenAI(model='gpt-4o', temperature=0, api_key=OPENAI_API_KEY, streaming=True)
         llm_with_tools = llm.bind_tools(tools)
 
         def agent(state: MessagesState):
@@ -68,6 +68,11 @@ class AssistantAgent:
         self.graph = graph_builder.compile(checkpointer=memory)
 
     def run(self, chat, chat_history):
-        result = self.graph.invoke({'messages': [*chat_history, ('user', chat)]}, {'configurable': {'thread_id': '1'}})
-        messages = result['messages']
-        return markdown.markdown(messages[-1].content)
+        for message_chunk, metadata in self.graph.stream(
+            {'messages': [*chat_history, ('user', chat)]},
+            {'configurable': {'thread_id': '1'}},
+            stream_mode="messages"
+        ):
+            if hasattr(message_chunk, "content") and message_chunk.content:
+                print(message_chunk.content)
+                yield message_chunk.content

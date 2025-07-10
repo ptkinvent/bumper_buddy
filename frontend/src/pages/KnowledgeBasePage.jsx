@@ -275,6 +275,12 @@ export default function KnowledgeBasePage() {
     data.append("history", JSON.stringify(chatHistory));
 
     setIsSubmitting(true);
+    setChatHistory((prevChatHistory) => [
+      ...prevChatHistory,
+      { role: "user", content: chat },
+      { role: "assistant", content: "" },
+    ]);
+
     fetch(`/api/assistant/`, {
       method: "POST",
       headers: {
@@ -282,17 +288,47 @@ export default function KnowledgeBasePage() {
       },
       body: data,
     })
-      .then((response) => response.json())
-      .then((data) => {
-        setChatHistory((prevChatHistory) => [...prevChatHistory, { role: "assistant", content: data.response }]);
+      .then((response) => {
+        if (!response.body) throw new Error("No response body");
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let assistantContent = "";
+
+        function read() {
+          return reader.read().then(({ done, value }) => {
+            if (done) {
+              setIsSubmitting(false);
+              return;
+            }
+            const chunk = decoder.decode(value, { stream: true });
+            // Split on double newlines in case multiple events in one chunk
+            chunk.split("\n\n").forEach((event) => {
+              if (event.startsWith("data: ")) {
+                const dataChunk = event.replace("data: ", "");
+                assistantContent += dataChunk;
+                setChatHistory((prevChatHistory) => {
+                  // Update the last assistant message
+                  const updated = [...prevChatHistory];
+                  const lastIdx = updated.length - 1;
+                  if (updated[lastIdx]?.role === "assistant") {
+                    updated[lastIdx] = {
+                      ...updated[lastIdx],
+                      content: assistantContent,
+                    };
+                  }
+                  return updated;
+                });
+              }
+            });
+            return read();
+          });
+        }
+        return read();
       })
       .catch(() => {
         setFetchFailed(true);
-      })
-      .finally(() => {
         setIsSubmitting(false);
       });
-    setChatHistory((prevChatHistory) => [...prevChatHistory, { role: "user", content: chat }]);
   }
 
   parts.forEach((part) => {
